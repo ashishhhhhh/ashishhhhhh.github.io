@@ -10,172 +10,99 @@
 </head>
 <body>
 
-  <!-- BACKGROUND PIXEL CANVAS -->
-  <canvas id="bgCanvas"></canvas>
-
+  <!-- Navbar -->
   <nav>
-    <!-- Left Corner - Name -->
-    <div class="logo">Currently working on it(this website)</div>
-
-    <!-- Center - Navigation -->
-    <div class="nav-links">
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-       <a id="contact-btn">Contact</a>
-    </div>
-
+    <div class="logo">Currently working on this website</div>
+    <ul>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#" id="contactBtn">Contact</a></li>
+    </ul>
   </nav>
-  
-  <!-- <div class="icon-bar" id="icon-bar">
-    <a href="https://www.instagram.com/yourusername" target="_blank" rel="noopener noreferrer">
-      <i class="fa-brands fa-instagram" style="color:#E1306C;"></i>
-    </a>
-    <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">
-      <i class="fa-brands fa-github" style="color:#333;"></i>
-    </a>
-    <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer">
-      <i class="fa-brands fa-twitter" style="color:#1DA1F2;"></i>
-    </a>
-    <a href="https://www.youtube.com/@yourchannel" target="_blank" rel="noopener noreferrer">
-      <i class="fa-brands fa-youtube" style="color:#FF0000;"></i>
-    </a>
-  </div> -->
 
-   <!-- CONTACT FORM
-  <div class="contact-panel" id="contact-panel">
-    <h2>Contact Me</h2>
-    <input type="text" placeholder="First Name">
-    <input type="email" placeholder="Email">
-    <textarea rows="5" placeholder="Your Message"></textarea>
-    <button>Submit</button> -->
-  <!-- </div> CONTACT SLIDE (form + icons together) -->
- <!-- CONTACT SLIDE (form + icons together) -->
-  <div class="contact-wrapper" id="contact-wrapper">
-    <span class="close-btn" id="close-btn">&times;</span>
-    <div class="contact-form">
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Hello!<br> I am Ashish Sharma<br> a <span class="typing"></span></h1>
+  </section>
+
+  <!-- Background Pixel Grid -->
+  <div class="grid" id="grid"></div>
+
+  <!-- Contact Slide -->
+  <div class="contact-wrapper" id="contactWrapper">
+    <form class="contact-form">
       <h2>Contact Me</h2>
-      <input type="text" placeholder="First Name">
-      <input type="email" placeholder="Email">
-      <textarea rows="5" placeholder="Your Message"></textarea>
-      <button>Submit</button>
-    </div>
+      <input type="text" placeholder="First Name" required>
+      <input type="email" placeholder="Email" required>
+      <textarea rows="4" placeholder="Message"></textarea>
+      <button type="submit">Submit</button>
+    </form>
 
-    <!-- ICONS INSIDE SLIDE -->
     <div class="icon-bar">
-      <a href="https://www.instagram.com/" target="_blank"><i class="fa-brands fa-instagram" style="color:#E1306C;"></i></a>
-      <a href="https://github.com/" target="_blank"><i class="fa-brands fa-github" style="color:#333;"></i></a>
-      <a href="https://twitter.com/" target="_blank"><i class="fa-brands fa-twitter" style="color:#1DA1F2;"></i></a>
-      <a href="https://youtube.com/" target="_blank"><i class="fa-brands fa-youtube" style="color:#FF0000;"></i></a>
+      <a href="https://www.instagram.com/yourusername" target="_blank"><i class="fa-brands fa-instagram" style="color:#E1306C;"></i></a>
+      <a href="https://github.com/yourusername" target="_blank"><i class="fa-brands fa-github" style="color:#333;"></i></a>
+      <a href="https://twitter.com/yourusername" target="_blank"><i class="fa-brands fa-twitter" style="color:#1DA1F2;"></i></a>
+      <a href="https://www.youtube.com/@yourchannel" target="_blank"><i class="fa-brands fa-youtube" style="color:#FF0000;"></i></a>
     </div>
   </div>
-
-
 
   <script>
-      /* CONTACT BUTTON TOGGLE */
-    const contactBtn = document.getElementById('contact-btn');
-    const contactWrapper = document.getElementById('contact-wrapper');
-    const closeBtn = document.getElementById('close-btn');
+    /* Typing Effect */
+    const roles = ["{iOS Developer}", "{macOS Developer}", "{Flutter Developer}"];
+    let roleIndex = 0, charIndex = 0, deleting = false;
+    const typingElement = document.querySelector(".typing");
 
-    contactBtn.addEventListener('click', () => {
-      contactWrapper.classList.add('show');
-    });
-    closeBtn.addEventListener('click', () => {
-      contactWrapper.classList.remove('show');
-    });
-
-      /* BACKGROUND PIXEL GRID */
-    const canvas = document.getElementById("bgCanvas");
-    const ctx = canvas.getContext("2d");
-    let width, height, pixels = [];
-    let mouseX = -1000, mouseY = -1000;
-
-    function resizeCanvas() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      createPixels();
-    }
-
-    function createPixels() {
-      pixels = [];
-      const size = 5;
-      for (let x = 0; x < width; x += size) {
-        for (let y = 0; y < height; y += size) {
-          pixels.push({ x, y, size });
+    function type() {
+      const currentRole = roles[roleIndex];
+      if (!deleting) {
+        typingElement.textContent = currentRole.substring(0, charIndex++);
+        if (charIndex > currentRole.length) {
+          deleting = true;
+          setTimeout(type, 1500);
+          return;
+        }
+      } else {
+        typingElement.textContent = currentRole.substring(0, charIndex--);
+        if (charIndex < 0) {
+          deleting = false;
+          roleIndex = (roleIndex + 1) % roles.length;
+          charIndex = 0;
         }
       }
+      setTimeout(type, deleting ? 80 : 120);
     }
+    type();
 
-    function drawPixels() {
-      ctx.clearRect(0, 0, width, height);
-      pixels.forEach(p => {
-        const dx = mouseX - (p.x + p.size / 2);
-        const dy = mouseY - (p.y + p.size / 2);
-        const dist = Math.sqrt(dx*dx + dy*dy);
+    /* Contact Panel Toggle */
+    const contactBtn = document.getElementById("contactBtn");
+    const contactWrapper = document.getElementById("contactWrapper");
 
-        // White normally, turn light grey if cursor is close
-        const maxDist = 120;
-        const intensity = Math.max(0, 1 - dist / maxDist); 
-        const shade = 255 - intensity * 55; // from white (255) to light grey (~200)
-
-        ctx.fillStyle = `rgb(${shade},${shade},${shade})`;
-        ctx.fillRect(p.x, p.y, p.size - 2, p.size - 2);
-      });
-      requestAnimationFrame(drawPixels);
-    }
-
-    resizeCanvas();
-    drawPixels();
-    window.addEventListener("resize", resizeCanvas);
-
-    // track mouse position
-    window.addEventListener("mousemove", e => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+    contactBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      contactWrapper.classList.toggle("show");
     });
 
+    /* Pixel Grid */
+    const grid = document.getElementById("grid");
+    const cols = Math.floor(window.innerWidth / 20);
+    const rows = Math.floor(window.innerHeight / 20);
+    for (let i = 0; i < cols * rows; i++) {
+      const pixel = document.createElement("div");
+      pixel.classList.add("pixel");
+      grid.appendChild(pixel);
+    }
 
+    const pixels = document.querySelectorAll(".pixel");
+    document.addEventListener("mousemove", (e) => {
+      const x = Math.floor(e.clientX / 20);
+      const y = Math.floor(e.clientY / 20);
+      const index = y * cols + x;
+      if (pixels[index]) {
+        pixels[index].classList.add("active");
+        setTimeout(() => pixels[index].classList.remove("active"), 300);
+      }
+    });
   </script>
-
-  <div class="headline">
-    Hello!<br> I am Ashish Sharma<br> a
-    <!-- <span class="brace-block"> -->
-      <span class="stack">
-        <!-- Word 1: iOS Developer (13 chars) — active 0–4s -->
-        <span class="word"
-          style="
-            --w:15ch;
-            animation:
-              typeSlice var(--cycle) steps(15, end) infinite,
-              caretBlink .8s step-end infinite;
-            animation-delay: 0s, 0s;
-          "
-        >{iOS Developer}</span>
-
-        <!-- Word 2: macOS Developer (15 chars) — active 4–8s -->
-        <span class="word"
-          style="
-            --w:17ch;
-            animation:
-              typeSlice var(--cycle) steps(17, end) infinite,
-              caretBlink .8s step-end infinite;
-            animation-delay: 4s, 4s;
-          "
-        >{macOS Developer}</span>
-
-        <!-- Word 3: Flutter Developer (17 chars) — active 8–12s -->
-        <span class="word"
-          style="
-            --w:19ch;
-            animation:
-              typeSlice var(--cycle) steps(19, end) infinite,
-              caretBlink .8s step-end infinite;
-            animation-delay: 8s, 8s;
-          "
-        >{Flutter Developer}</span>
-      </span>
-    <!-- </span> -->
-  </div>
-
 </body>
+
 </html>
