@@ -9,99 +9,168 @@
 
 </head>
 <body>
+  <!-- Pixel Grid -->
+  <div class="grid" id="grid"></div>
 
   <!-- Navbar -->
   <nav>
-    <div class="logo">Currently working on this website</div>
-    <ul>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="#" id="contactBtn">Contact</a></li>
-    </ul>
+    <div class="logo">Ashish Sharma</div>
+    <div class="nav-links">
+      <a href="#" id="aboutBtn">About</a>
+      <a href="#" id="projectsBtn">Projects</a>
+      <a href="#" id="resumeBtn">Resume</a>
+      <div class="resume-popup" id="resumePopup">
+        <button class="show-btn" id="showResume">Show</button>
+        <button class="download-btn" id="downloadResume">Download</button>
+      </div>
+      <a href="#" id="contactBtn">Contact</a>
+    </div>
   </nav>
 
   <!-- Hero -->
   <section class="hero">
-    <h1>Hello!<br> I am Ashish Sharma<br> a <span class="typing"></span></h1>
+    <h1>Hello! <br> I am Ashish Sharma <br> a <span class="typing"></span></h1>
   </section>
 
-  <!-- Background Pixel Grid -->
-  <div class="grid" id="grid"></div>
+  <!-- About Popup -->
+  <div class="about-popup" id="aboutPopup">
+    <p>its not complete yet.</p>
+  </div>
 
-  <!-- Contact Slide -->
-  <div class="contact-wrapper" id="contactWrapper">
-    <form class="contact-form">
-      <h2>Contact Me</h2>
-      <input type="text" placeholder="First Name" required>
+  <!-- Projects Popup -->
+  <div class="projects-popup" id="projectsPopup">
+    <span class="close-btn" id="closeProjects">&times;</span>
+    <h2>Project Showcase</h2>
+    <p>This is an animated popup for projects. Will replace it with real animations later and i am currently working it.</p>
+  </div>
+
+  <!-- Contact Panel -->
+  <div class="contact-panel" id="contactPanel">
+    <span class="close-btn" id="closeContact">&times;</span>
+    <h2>Contact Me</h2>
+    <form class="contact-form" onsubmit="sendMail(event)">
+      <input type="text" placeholder="Full Name" required>
       <input type="email" placeholder="Email" required>
-      <textarea rows="4" placeholder="Message"></textarea>
+      <textarea rows="4" placeholder="Message" required></textarea>
       <button type="submit">Submit</button>
     </form>
-
     <div class="icon-bar">
-      <a href="https://www.instagram.com/yourusername" target="_blank"><i class="fa-brands fa-instagram" style="color:#E1306C;"></i></a>
-      <a href="https://github.com/yourusername" target="_blank"><i class="fa-brands fa-github" style="color:#333;"></i></a>
-      <a href="https://twitter.com/yourusername" target="_blank"><i class="fa-brands fa-twitter" style="color:#1DA1F2;"></i></a>
-      <a href="https://www.youtube.com/@yourchannel" target="_blank"><i class="fa-brands fa-youtube" style="color:#FF0000;"></i></a>
+      <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://github.com" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://wa.me/1234567890" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
     </div>
   </div>
 
+  <!-- Resume Panel -->
+  <div class="resume-panel" id="resumePanel">
+    <span class="close-btn" id="closeResume">&times;</span>
+    <iframe src="Ashish_Sharma Resume_2025.pdf"></iframe>
+  </div>
+
   <script>
-    /* Typing Effect */
-    const roles = ["{iOS Developer}", "{macOS Developer}", "{Flutter Developer}"];
-    let roleIndex = 0, charIndex = 0, deleting = false;
-    const typingElement = document.querySelector(".typing");
-
-    function type() {
-      const currentRole = roles[roleIndex];
-      if (!deleting) {
-        typingElement.textContent = currentRole.substring(0, charIndex++);
-        if (charIndex > currentRole.length) {
-          deleting = true;
-          setTimeout(type, 1500);
-          return;
-        }
-      } else {
-        typingElement.textContent = currentRole.substring(0, charIndex--);
-        if (charIndex < 0) {
-          deleting = false;
-          roleIndex = (roleIndex + 1) % roles.length;
-          charIndex = 0;
-        }
-      }
-      setTimeout(type, deleting ? 80 : 120);
-    }
-    type();
-
-    /* Contact Panel Toggle */
-    const contactBtn = document.getElementById("contactBtn");
-    const contactWrapper = document.getElementById("contactWrapper");
-
-    contactBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      contactWrapper.classList.toggle("show");
-    });
-
     /* Pixel Grid */
     const grid = document.getElementById("grid");
-    const cols = Math.floor(window.innerWidth / 20);
-    const rows = Math.floor(window.innerHeight / 20);
-    for (let i = 0; i < cols * rows; i++) {
-      const pixel = document.createElement("div");
-      pixel.classList.add("pixel");
-      grid.appendChild(pixel);
+    const size = 20;
+    let cols, rows, pixels = [];
+    function buildGrid() {
+      grid.innerHTML = "";
+      cols = Math.floor(window.innerWidth / size);
+      rows = Math.floor(window.innerHeight / size);
+      pixels = [];
+      for (let i = 0; i < rows * cols; i++) {
+        const pixel = document.createElement("div");
+        pixel.classList.add("pixel");
+        grid.appendChild(pixel);
+        pixels.push(pixel);
+      }
     }
-
-    const pixels = document.querySelectorAll(".pixel");
+    buildGrid();
+    window.addEventListener("resize", buildGrid);
     document.addEventListener("mousemove", (e) => {
-      const x = Math.floor(e.clientX / 20);
-      const y = Math.floor(e.clientY / 20);
+      const x = Math.floor(e.clientX / size);
+      const y = Math.floor(e.clientY / size);
       const index = y * cols + x;
-      if (pixels[index]) {
-        pixels[index].classList.add("active");
-        setTimeout(() => pixels[index].classList.remove("active"), 300);
+      [index, index-1, index+1, index-cols, index+cols].forEach(i => {
+        if (pixels[i]) {
+          pixels[i].classList.add("active");
+          setTimeout(() => pixels[i].classList.remove("active"), 300);
+        }
+      });
+    });
+
+    /* Typing Effect */
+    const words = ["{iOS Developer}","{macOS Developer}","{Flutter Developer}"];
+    let i = 0, j = 0, currentWord = "", isDeleting = false;
+    const typingEl = document.querySelector(".typing");
+    function typeEffect() {
+      currentWord = words[i];
+      typingEl.textContent = isDeleting ? currentWord.substring(0, j--) : currentWord.substring(0, j++);
+      if (!isDeleting && j === currentWord.length+1) { isDeleting = true; setTimeout(typeEffect, 1000); return; }
+      if (isDeleting && j === 0) { isDeleting = false; i = (i+1)%words.length; }
+      setTimeout(typeEffect, isDeleting ? 100 : 150);
+    }
+    typeEffect();
+
+    /* Nav Buttons */
+    const aboutPopup = document.getElementById("aboutPopup");
+    document.getElementById("aboutBtn").addEventListener("click", () => {
+      aboutPopup.classList.toggle("active");
+    });
+
+    const projectsPopup = document.getElementById("projectsPopup");
+    document.getElementById("projectsBtn").addEventListener("click", () => {
+      projectsPopup.classList.add("active");
+    });
+    document.getElementById("closeProjects").addEventListener("click", () => {
+      projectsPopup.classList.remove("active");
+    });
+
+    const contactPanel = document.getElementById("contactPanel");
+    document.getElementById("contactBtn").addEventListener("click", () => {
+      contactPanel.classList.add("active");
+    });
+    document.getElementById("closeContact").addEventListener("click", () => {
+      contactPanel.classList.remove("active");
+    });
+
+    /* Resume Popup under nav */
+    const resumeBtn = document.getElementById("resumeBtn");
+    const resumePopup = document.getElementById("resumePopup");
+    resumeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      resumePopup.style.display = resumePopup.style.display === "flex" ? "none" : "flex";
+    });
+
+    // 🔹 Close resume popup on outside click
+    document.addEventListener("click", (e) => {
+      if (!resumeBtn.contains(e.target) && !resumePopup.contains(e.target)) {
+        resumePopup.style.display = "none";
       }
     });
+
+    const resumePanel = document.getElementById("resumePanel");
+    document.getElementById("showResume").addEventListener("click", () => {
+      resumePanel.classList.add("active");
+      resumePopup.style.display = "none";
+    });
+    document.getElementById("closeResume").addEventListener("click", () => {
+      resumePanel.classList.remove("active");
+    });
+
+    document.getElementById("downloadResume").addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.href = "Ashish_Sharma Resume_2025.pdf"; // file in same folder
+      link.download = "Ashish_Sharma_Resume_2025.pdf";
+      link.click();
+      resumePopup.style.display = "none";
+    });
+
+    /* Fake Mail Submit */
+    function sendMail(e) {
+      e.preventDefault();
+      alert("This will be connected to Gmail API or EmailJS in production.");
+    }
   </script>
 </body>
 
